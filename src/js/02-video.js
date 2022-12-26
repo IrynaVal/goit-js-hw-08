@@ -1,25 +1,26 @@
 import Player from '@vimeo/player';
+import throttle from 'lodash.throttle';
 
-console.log(Player);
+const iframe = document.querySelector('iframe');
+const player = new Player(iframe);
+const CURRENT_TIME_KEY = "videoplayer-current-time";
+const currentTime = JSON.parse(localStorage.getItem(CURRENT_TIME_KEY));
 
-const test = 10;
-console.log(test);
+player.on('timeupdate', throttle(function (currentTime) {
+    const seconds = currentTime.seconds;
+    localStorage.setItem(CURRENT_TIME_KEY, JSON.stringify(seconds));
+}, 1000));
 
+player.setCurrentTime(currentTime).then(function(seconds) {
+    // seconds = the actual time that the player seeked to
+}).catch(function(error) {
+    switch (error.name) {
+        case 'RangeError':           
+            // the time was less than 0 or greater than the video’s duration
+            break;
 
-// const player = new Player('handstick', {
-//     id: 19231868,
-//     width: 640
-// });
-
-// player.on('play', function() {
-//     console.log('played the video!');
-// });
-
-// timeupdate
-// Triggered as the currentTime of the video updates. It generally fires every 250ms, but it may vary depending on the browser.
-
-// {
-//     duration: 61.857
-//     percent: 0.049
-//     seconds: 3.034
-// }
+        default:
+            // some other error occurred
+            break;
+    }
+});
