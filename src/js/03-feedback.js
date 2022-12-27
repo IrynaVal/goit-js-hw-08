@@ -28,11 +28,15 @@ function onFormSubmit(evt) {
 function fillInForm() {
   try {
     const savedData = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY));
-    console.log(savedData);
+    // console.log(savedData);
 
     if (savedData) {
       form.elements.email.value = savedData.email ?? '';
       form.elements.message.value = savedData.message ?? ''; 
+
+      formData.email = savedData.email ?? '';
+      formData.message = savedData.message ?? ''; 
+      // console.log(formData);
     }
   } catch (error) {
           console.log(error.message);
@@ -45,8 +49,8 @@ function fillInForm() {
 
 //     if (savedData) {       
 //       Object.entries(savedData).forEach(([key, value]) => {
-//         console.log(form[key].value = value);
-//         console.log(formData[key] = value);
+//         form[key].value = value;
+//         formData[key] = value;
 //     })
 //   };
 // }
